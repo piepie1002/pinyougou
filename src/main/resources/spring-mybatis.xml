@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--1.1配置连接池-->
+        <property name="dataSource" ref="dataSource"/>
+        <!--1.2 注册所有的mapper.xml文件 ** 表示多级目录-->
+        <property name="mapperLocations" value="classpath:mapper/**/"/>
+        <!--1.3配置mapper.xml持久化对象的别名-->
+        <property name="typeAliasesPackage" value="com.pie.paradise.entity"/>
+        <!--1.4配置mybatis 核心配置文件(可选)-->
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <property name="plugins">
+            <set>
+                <!--配置pageHelper 分页插件-->
+                <bean class="com.github.pagehelper.PageInterceptor">
+                    <property name="properties">
+                        <props>
+                            <!--方言：-->
+                            <prop key="helperDialect">mysql</prop>
+                        </props>
+                    </property>
+                </bean>
+            </set>
+        </property>
+    </bean>
+    <!--2.扫描所有的mapper的接口文件-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.pie.paradise.mapper"/>
+        <property name="sqlSessionFactoryBeanName" value="sessionFactory"/>
+    </bean>
+</beans>
